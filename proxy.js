@@ -1,7 +1,7 @@
 /* jshint node: true */
 'use strict';
 
-// require('newrelic');
+require('newrelic');
 var args = process.argv,
     https = require('https'),
     fs = require('fs'),

@@ -1,11 +1,15 @@
 FROM ubuntu:14.04.1
-MAINTAINER Peter Mescalchin "peter@magnetikonline.com"
+MAINTAINER Ian Renyard "ian@renyard.net"
 
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get -y install \
 	apache2 build-essential \
 	libapache2-mod-perl2 libhtml-tidy-perl libosp-dev libxml-libxml-perl libxml2-dev \
-	openjdk-6-jre opensp supervisor unzip zlib1g-dev
+	openjdk-6-jre opensp supervisor unzip zlib1g-dev \
+	curl
+
+RUN curl -sL https://deb.nodesource.com/setup | sudo bash -
+RUN apt-get -y install nodejs
 
 RUN apt-get clean
 
@@ -16,11 +20,19 @@ ADD http://validator.w3.org/validator.tar.gz /root/build/
 ADD http://validator.w3.org/sgml-lib.tar.gz /root/build/
 ADD https://github.com/validator/validator/releases/download/20150216/vnu-20150216.jar.zip /root/build/
 
+ADD ./proxy.js /opt/proxy/
+RUN chmod a+x /opt/proxy/proxy.js
+ADD ./certs/server.crt /etc/ssl/server.crt
+ADD ./certs/server.key /etc/ssl/server.key
+ADD ./package.json /opt/proxy/
+RUN cd /opt/proxy/ && npm install
+
 ADD ./resource/configure.sh /root/build/
 WORKDIR /root/build
 RUN chmod a+x configure.sh
 RUN ./configure.sh
 
 EXPOSE 80
+EXPOSE 443
 
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"]

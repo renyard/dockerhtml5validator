@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo docker build -t magnetikonline/html5validator .
+sudo docker build -t renyard/html5validator .
