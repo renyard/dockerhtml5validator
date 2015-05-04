@@ -28,20 +28,16 @@ ADD ./package.json /opt/proxy/
 RUN cd /opt/proxy/ && npm install && cd -
 RUN cp /opt/proxy/node_modules/newrelic/newrelic.js /opt/proxy/
 
-ADD ./resource/configure.sh /root/build/
-WORKDIR /root/build
-RUN chmod a+x configure.sh
-RUN ./configure.sh
-
 RUN sh -c 'echo deb http://apt.newrelic.com/debian/ newrelic non-free > /etc/apt/sources.list.d/newrelic.list'
 RUN curl -sL https://download.newrelic.com/548C16BF.gpg | apt-key add -
 RUN apt-get update
 RUN apt-get install newrelic-sysmond
-RUN echo "To complete setup of New Relic, run:"
-RUN echo "nrsysmond-config --set license_key=YOUR_LICENSE_KEY"
-RUN echo "/etc/init.d/newrelic-sysmond start"
-RUN echo ""
-RUN echo "For the Node app monitoring, add the the licence key to /opt/proxy/newrelic.js"
+
+ADD nrlicence /root/build/
+ADD ./resource/configure.sh /root/build/
+WORKDIR /root/build
+RUN chmod a+x configure.sh
+RUN ./configure.sh
 
 EXPOSE 80
 EXPOSE 443

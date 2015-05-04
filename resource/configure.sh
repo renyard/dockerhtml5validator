@@ -4,6 +4,9 @@ W3C_VALIDATOR_CONF="/etc/w3c/validator.conf"
 W3C_VALIDATOR_APACHE_CONF="/etc/apache2/conf-available/w3c-validator.conf"
 VALIDATOR_NU_BASE_DIR="/root/build/validator.nu"
 
+NEW_RELIC_LICENCE=$(cat nrlicence | tr -d '\n')
+NEW_RELIC_SERVER_CONF="/etc/newrelic/nrsysmond.cfg"
+NEW_RELIC_NODE_CONF="/opt/proxy/newrelic.js"
 
 # configure Perl
 PERL_MM_USE_DEFAULT=1 \
@@ -67,7 +70,6 @@ a2dismod perl
 a2enconf server
 a2enconf w3c-validator
 
-
 # install standalone validator.nu jar to $VALIDATOR_NU_BASE_DIR/vnu.jar
 mkdir $VALIDATOR_NU_BASE_DIR
 unzip -j vnu-*.zip -d $VALIDATOR_NU_BASE_DIR
@@ -78,5 +80,17 @@ cat $W3C_VALIDATOR_CONF \
 	| sed -e 's/#CompoundXML =/CompoundXML/' \
 	> $W3C_VALIDATOR_CONF.tmp
 mv $W3C_VALIDATOR_CONF.tmp $W3C_VALIDATOR_CONF
+
+# Update New Relic Server conf with licence key.
+cat $NEW_RELIC_SERVER_CONF \
+	| sed -r 's/REPLACE_WITH_REAL_KEY/'$NEW_RELIC_LICENCE'/' \
+	> $NEW_RELIC_SERVER_CONF.tmp
+mv $NEW_RELIC_SERVER_CONF.tmp $NEW_RELIC_SERVER_CONF
+
+# Update New Relic Node conf with licence key.
+cat $NEW_RELIC_NODE_CONF \
+	| sed -e 's/license key here/'$NEW_RELIC_LICENCE'/' \
+	> $NEW_RELIC_NODE_CONF.tmp
+mv $NEW_RELIC_NODE_CONF.tmp $NEW_RELIC_NODE_CONF
 
 # all done
