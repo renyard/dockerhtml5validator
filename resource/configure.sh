@@ -90,6 +90,7 @@ mv $NEW_RELIC_SERVER_CONF.tmp $NEW_RELIC_SERVER_CONF
 # Update New Relic Node conf with licence key.
 cat $NEW_RELIC_NODE_CONF \
 	| sed -e 's/license key here/'$NEW_RELIC_LICENCE'/' \
+	| sed -e 's/My Application/Validity Node Proxy/' \
 	> $NEW_RELIC_NODE_CONF.tmp
 mv $NEW_RELIC_NODE_CONF.tmp $NEW_RELIC_NODE_CONF
 
