@@ -93,5 +93,6 @@ cat $NEW_RELIC_NODE_CONF \
 	| sed -e 's/My Application/Validity Node Proxy/' \
 	> $NEW_RELIC_NODE_CONF.tmp
 mv $NEW_RELIC_NODE_CONF.tmp $NEW_RELIC_NODE_CONF
+/etc/init.d/newrelic-sysmond start
 
 # all done
