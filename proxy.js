@@ -17,8 +17,8 @@ port = parseInt(args[3]) || 443;
 server = https.createServer({
     key: fs.readFileSync('/etc/ssl/server.key'),
     cert: fs.readFileSync('/etc/ssl/server.crt'),
-    ciphers: 'ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:AES128-GCM-SHA256',
-    secureProtocol: 'TLSv12_method'
+    ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+    secureProtocol: 'SSLv23_method'
 }, function(req, res) {
     // console.log(req);
     req.on('error', function(e) {
